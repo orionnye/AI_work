@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalculatorCssTest</title>
+</head>
+<body>
+    <infiniteCorridor id = "infiniteCorridor">
+        <div>0</div>
+    </infiniteCorridor>
+    <button onclick="addElement()"></button>
+    <script>
+
+        function addElement() {
+            const infiniteCorridor = document.getElementById("infiniteCorridor");
+            const childCount = infiniteCorridor.childElementCount
+            // create a new div element
+            const newDiv = document.createElement("div");
+            // and give it some content
+            const newContent = document.createTextNode(childCount.toString());
+            // add the text node to the newly created div
+            newDiv.appendChild(newContent);
+            // add the newly created element and its content into the DOM
+            const currentDiv = document.getElementById("infiniteCorridor");
+            document.body.insertBefore(newDiv, currentDiv);
+        }
+    </script>
+</body>
+</html>

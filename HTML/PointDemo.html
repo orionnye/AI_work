@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <script>
+        let canvas = document.getElementById("canvas");
+        let ctx = canvas.getContext("2d");
+        ctx.fillStyle = "red";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        console.log("Hello World");
+
+        function Grid() {
+
+        }
+        function Update() {
+
+        }
+        function Render() {
+            
+        }
+
+        // ctx.fillStyle = "rgb(250 250 250)";
+        ctx.fillStyle = "#000000";
+        ctx.beginPath();
+        ctx.arc(95, 50, 40, 0, 2 * Math.PI);
+        ctx.fill();
+    </script>
+</body>
+</html>

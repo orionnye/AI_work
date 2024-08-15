@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <canvas id="canvas" width="500" height="500"></canvas>
+</head>
+<body>
+    <script>
+        // Define the Node class
+        class Node {
+            constructor(x, y, z) {
+                this.x = x;
+                this.y = y;
+                this.z = z;
+                this.next = null;
+                this.children = null;
+            }
+        }
+
+        // Define the LinkedList class
+        class LinkedList {
+            constructor() {
+                this.head = null;
+            }
+
+            // Method to add a node to the list
+            addNode(x, y, z) {
+                let node = new Node(x, y, z);
+                node.next = this.head;
+                this.head = node;
+            }
+
+            // Method to add children to a node
+            addChildren(node, x, y, z) {
+                let child = new Node(x, y, z);
+                child.next = node.children;
+                node.children = child;
+            }
+
+            // Method to display the nodes on a canvas
+            display(canvas, showChildren) {
+                let ctx = canvas.getContext('2d');
+                let currentNode = this.head;
+
+                while (currentNode) {
+                ctx.beginPath();
+                ctx.arc(currentNode.x, currentNode.y, currentNode.z, 0, 2 * Math.PI);
+                ctx.fillStyle = 'black';
+                ctx.fill();
+
+                if (showChildren && currentNode.children) {
+                    let child = currentNode.children;
+                    while (child) {
+                    ctx.beginPath();
+                    ctx.arc(child.x, child.y, child.z, 0, 2 * Math.PI);
+                    ctx.fillStyle = 'red';
+                    ctx.fill();
+                    child = child.next;
+                    }
+                }
+
+                currentNode = currentNode.next;
+                }
+            }
+        }
+
+        // Create a new linked list and add some nodes
+        let list = new LinkedList();
+        list.addNode(10, 20, 5);
+        list.addNode(30, 40, 10);
+        list.addNode(50, 60, 15);
+
+        // Add children to the nodes
+        list.addChildren(list.head, 15, 25, 3);
+        list.addChildren(list.head.next, 35, 45, 5);
+        list.addChildren(list.head.next.next, 55, 65, 7);
+
+        // Get a reference to the canvas element
+        let canvas = document.getElementById('canvas');
+
+        // Create a button to toggle between generations
+        let button = document.createElement('button');
+        button.textContent = 'Toggle Children';
+        button.onclick = function() {
+            showChildren = !showChildren;
+            list.display(canvas, showChildren);
+        }
+        document.body.appendChild(button);
+
+        // Clear the canvas
+        canvas.width = canvas.width;
+
+        // Display the nodes
+        let showChildren = false;
+        list.display(canvas, showChildren);
+    </script>
+    
+</body>
+</html>

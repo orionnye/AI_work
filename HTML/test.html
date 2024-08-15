@@ -1,0 +1,233 @@
+<html name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Code Generation</title>
+    <style>
+        body {
+            text-align: center;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #000;
+            border-radius: 5px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #000;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+        }
+
+        .modal-close-btn {
+            cursor: pointer;
+        }
+
+        .modal-body {
+            margin-top: 20px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #000;
+            border-radius: 5px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .modal-save-btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #000;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .item-text {
+            flex: 1;
+        }
+
+        .item-buttons {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .item-save-btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .item-delete-btn {
+            padding: 10px 20px;
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="container">        
+        <button id="openModalBtn" class="button">Add Item</button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add Item</h2>
+                <span class="modal-close-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="modal-input" id="item-input">
+            </div>
+            <div class="modal-footer">
+                <button class="modal-save-btn" id="modal-save-btn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const openModalBtn = document.getElementById('openModalBtn');
+        const modal = document.getElementById('modal');
+        const modalCloseBtn = document.querySelector('.modal-close-btn');
+        const modalSaveBtn = document.getElementById('modal-save-btn');
+        const container = document.getElementById('container');
+        const itemInput = document.getElementById('item-input');
+
+        // Open modal
+        openModalBtn.addEventListener('click', () => {
+            modal.style.display = 'block';
+        });
+
+        // Close modal
+        modalCloseBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        // Save item
+        modalSaveBtn.addEventListener('click', () => {
+            const itemText = itemInput.value;
+
+            // Create item div
+            const item = document.createElement('div');
+            item.classList.add('item');
+
+            // Create item text
+            const itemTextElement = document.createElement('p');
+            itemTextElement.classList.add('item-text');
+            itemTextElement.textContent = itemText;
+
+            // Create item buttons
+            const itemButtons = document.createElement('div');
+            itemButtons.classList.add('item-buttons');
+
+            // Create save button
+            const itemSaveBtn = document.createElement('button');
+            itemSaveBtn.classList.add('item-save-btn');
+            itemSaveBtn.textContent = 'Save';
+
+            // Create delete button
+            const itemDeleteBtn = document.createElement('button');
+            itemDeleteBtn.classList.add('item-delete-btn');
+            itemDeleteBtn.textContent = 'Delete';
+
+            // Add buttons to item
+            itemButtons.appendChild(itemSaveBtn);
+            itemButtons.appendChild(itemDeleteBtn);
+
+            // Add text and buttons to item
+            item.appendChild(itemTextElement);
+            item.appendChild(itemButtons);
+
+            // Add item to container
+            container.appendChild(item);
+
+            // Clear input
+            itemInput.value = '';
+
+            // Close modal
+            modal.style.display = 'none';
+
+            // Add event listener to save button
+            itemSaveBtn.addEventListener('click', () => {
+                // Send AJAX request to save item
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', 'save_item.php');
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.send(JSON.stringify({ itemText: itemText }));
+
+                // Handle response
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        alert('Item saved successfully!');
+                    } else {
+                        alert('Error saving item!');
+                    }
+                };
+            });
+
+            // Add event listener to delete button
+            itemDeleteBtn.addEventListener('click', () => {
+                // Remove item from container
+                item.remove();
+            });
+        });
+    </script>
+</body>
+</html>

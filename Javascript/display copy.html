@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <canvas id="canvas" width="500" height="500"></canvas>
+</head>
+<body>
+    <script>
+        // Define the Node class
+        class Node {
+            constructor(x, y, z, children = []) {
+                this.x = x;
+                this.y = y;
+                this.z = z;
+                this.next = null;
+                this.children = children;
+            }
+        }
+
+        // Define the LinkedList class
+        class LinkedList {
+            constructor() {
+                this.head = null;
+                this.currentGeneration = 0;
+            }
+
+            // Method to add a node to the list
+            addNode(x, y, z, children = []) {
+                let node = new Node(x, y, z, children);
+                node.next = this.head;
+                this.head = node;
+            }
+
+            // Method to add a generation of children to the list
+            addGeneration(children) {
+                let currentNode = this.head;
+                while (currentNode) {
+                currentNode.children = children;
+                currentNode = currentNode.next;
+                }
+            }
+
+            // Method to display the nodes on a canvas
+            display(canvas) {
+                let ctx = canvas.getContext('2d');
+                let currentNode = this.head;
+
+                while (currentNode) {
+                if (this.currentGeneration === 0) {
+                    // Display the main nodes
+                    ctx.beginPath();
+                    ctx.arc(currentNode.x, currentNode.y, currentNode.z, 0, 2 * Math.PI);
+                    ctx.fillStyle = 'black';
+                    ctx.fill();
+                } else {
+                    // Display the children nodes
+                    for (let child of currentNode.children) {
+                    ctx.beginPath();
+                    ctx.arc(child.x, child.y, child.z, 0, 2 * Math.PI);
+                    ctx.fillStyle = 'blue';
+                    ctx.fill();
+                    }
+                }
+
+                currentNode = currentNode.next;
+                }
+            }
+
+            // Method to toggle the generation being displayed
+            toggleGeneration() {
+                this.currentGeneration = this.currentGeneration === 0 ? 1 : 0;
+                this.display(canvas);
+            }
+        }
+
+        // Create a new linked list
+        let list = new LinkedList();
+
+        // Add some nodes to the list
+        list.addNode(10, 20, 5);
+        list.addNode(30, 40, 10);
+        list.addNode(50, 60, 15);
+
+        // Add a generation of children to the list
+        list.addGeneration([
+            {x: 12, y: 22, z: 3},
+            {x: 32, y: 42, z: 5},
+            {x: 52, y: 62, z: 7}
+        ]);
+
+        // Get a reference to the canvas element
+        let canvas = document.getElementById('canvas');
+
+        // Clear the canvas
+        canvas.width = canvas.width;
+
+        // Display the nodes
+        list.display(canvas);
+
+        // Create a button to toggle the generation being displayed
+        let toggleButton = document.createElement('button');
+        toggleButton.textContent = 'Toggle Generation';
+        document.body.appendChild(toggleButton);
+
+        // Add an event listener to the button
+        toggleButton.addEventListener('click', () => {
+            list.toggleGeneration();
+        });
+    </script>
+    
+</body>
+</html>
